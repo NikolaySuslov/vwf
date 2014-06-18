@@ -13,4 +13,5 @@ methods:
   stopAllSoundInstances:
 events:
   soundFinished:
+  playSubtitle:
 

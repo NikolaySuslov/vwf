@@ -553,8 +553,6 @@ define( [ "module", "vwf/model" ], function( module, model ) {
             this.gainNode.connect( context.destination );
             
 
-            this.sourceNode.start( 0 );
-
             var soundDatum = this.soundDatum;
 
             //Browsers will handle onEnded differently depending on audio filetype - needs support.
@@ -564,35 +562,51 @@ define( [ "module", "vwf/model" ], function( module, model ) {
                 soundManager.soundFinished( { soundName: soundDatum.soundName, 
                                               instanceID: id } );
 
+                // If the sound was part of a soundGroup and had a replacement method of 'queue'
+                // then we should keep playing more queue sounds!
+                
                 if ( soundDatum.soundGroup && soundDatum.replacementMethod === "queue" ) {
-                    // TODO: then you get the first thing from the queue, remove it,
-                    //   and play it.
+
+                    var currentPlayingInstance = soundGroups[ soundDatum.soundGroup ].queue.pop();
+                    var nextPlayingInstance = soundGroups[ soundDatum.soundGroup ].queue.pop();
+
+                    //If there's anything left in the queue, play it!
+                    if ( nextPlayingInstance !== undefined ){
+                        nextPlayingInstance.sourceNode.start( 0 );
+                    }
+                    
                 }
 
                 exitCallback && exitCallback();
             }
 
-            // TODO: Check if we're part of a sound group, and if we are then 
-            //   do something clever.
+            // Check if we're part of a sound group, and if we are then 
+            // handle replacement methods.
             if ( !!soundDatum.soundGroup ) {
                 switch ( soundDatum.replacementMethod ) {
+                    //Sounds will start playing 
                     case "queue":
                         if ( !soundGroups[ soundDatum.soundGroup ].queue ) {
                             soundGroups[ soundDatum.soundGroup ].queue = [];
                         }
-                        // TODO: there's a way to put things on the front of the
-                        //  array.  It's called "unshift".
-                        soundGroups[ soundDatum.soundGroup ].queue.push( this );
-                }
-                if ( soundDatum.replacementMethod == "queue" ) {
-                    // TODO: yes, there should probably be something more than a 
-                    //   comment here.
+                        //If there are no waiting sounds, start this one.
+                        if ( soundGroups[ soundDatum.soundGroup ].queue.length === 0 ){
+                            soundGroups[ soundDatum.soundGroup ].queue.unshift( this );
+                            this.sourceNode.start( 0 );
+                        } else {
+                            soundGroups[ soundDatum.soundGroup ].queue.unshift( this );
+                        }
+                        
+                    default:
+                        logger.warnx( "initialize", "Unknown or unsupported " +
+                           "replacementMethod." );
+                        this.sourceNode.start( 0 );
                 }
             }
 
-            // TODO: Do the subtitle thing
+            //If the soundDatum has subtitles, notify with an event.
             if ( !!this.soundDatum.subtitle ) {
-                // TODO: No really, do something here.
+                soundManager.playSubtitle( soundDatum.soundName );
             }
         },
 
