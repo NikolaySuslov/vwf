@@ -254,6 +254,8 @@ define( [ "module", "vwf/model" ], function( module, model ) {
         layerNames: null,
         instanceHandles: null,
 
+        numLayersLoaded: undefined,
+
         initialize: function ( layeredSoundDefinition, successCallback, failureCallback ) {
 
             this.name = layeredSoundDefinition.soundName;
@@ -261,23 +263,26 @@ define( [ "module", "vwf/model" ], function( module, model ) {
             this.playOnLoad = layeredSoundDefinition.playOnLoad;
             this.layerNames = [];
             this.instanceHandles = [];
+            this.numLayersLoaded = 0;
 
             var soundDefinitionObjects = Object.keys( layeredSoundDefinition.soundDefinitions );
 
+            var thisDatum = this;
+
             for ( var k = 0; k < soundDefinitionObjects.length; ++k ) {
 
-                var doneLoading = function() {
-                    successCallback && successCallback();
-                }
+                var layerLoadComplete = function() {
+                    ++thisDatum.numLayersLoaded;
 
-                var failureToLoad = function() {
-                    failureCallback && failureCallback();
-                }
+                    if ( thisDatum.numLayersLoaded === thisDatum.layerNames.length ) {
+                        if ( thisDatum.playOnLoad ) {
+                            thisDatum.playSound();
+                        }
 
-                // TODO: I doubt this will work because they won't all load at
-                //   the same time, but we need to synchronize them.
-                if ( this.playOnLoad === true ) {
-                    layeredSoundDefinition.soundDefinitions[k].playOnLoad = true;
+                        // TODO: should we ever fail?  What if 1 sound fails 
+                        //   to load?  What if they all do?
+                        successCallback && successCallback();
+                    }
                 }
 
                 var layerName = layeredSoundDefinition.soundDefinitions[k].soundName;
@@ -289,15 +294,11 @@ define( [ "module", "vwf/model" ], function( module, model ) {
                                   "Duplicate sound name for layer '" +
                                   layerName + "'." );
                 } else {
-                    // Again... we're going to call doneLoading for each layer, 
-                    //   which doesn't seem right...
-                    soundData[ layerName ] = new SoundDatum( layeredSoundDefinition.soundDefinitions[k], doneLoading , failureToLoad );
+                    soundData[ layerName ] = 
+                        new SoundDatum( layeredSoundDefinition.soundDefinitions[k], 
+                                        layerLoadComplete, layerLoadComplete );
                 }
             }
-
-            // TODO: We haven't really succeeded until every sound has loaded -and
-            //   at this point, none of them have!!
-            successCallback && successCallback();
         },
 
         playSound: function ( exitCallback ) {
