@@ -1126,7 +1126,7 @@ future.hasOwnProperty( eventName ) ||  // TODO: calculate so that properties tak
 
             set: unsettable ? undefined : function( value ) {  // `this` is the container
                 var node = this.node || this;  // the node via node.methods.node, or just node
-                if ( typeof value === "function" ) {
+                if ( typeof value === "function" || value instanceof Function ) {
                     value = utility.merge( handlerFromFunction( value ), { type: scriptMediaType } );
                 }
                 return self.kernel.setMethod( node.id, methodName, value );
