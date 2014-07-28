@@ -487,9 +487,7 @@ define( [ "module", "vwf/model", "vwf/utility",
             }
 
             if ( stepType && !self.state.executionHalted ) {
-                // I'm not sure I understand the use setTimeout here??
-                // anyone have an idea of why this would be better?
-                window.setTimeout( nextStep( node ), 0 );
+                nextStep( node );
             }
         }
     }
