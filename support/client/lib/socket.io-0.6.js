@@ -397,11 +397,9 @@ if (typeof window != 'undefined'){
    * @api private
    */
   Transport.prototype.setTimeout = function(){
-    var self = this;
+    // var self = this;
     if (this.timeout) clearTimeout(this.timeout);
-    this.timeout = setTimeout(function(){
-      self.onTimeout();
-    }, this.options.timeout);
+    this.timeout = setTimeout(this.onTimeout, this.options.timeout);
   };
   
   /**
