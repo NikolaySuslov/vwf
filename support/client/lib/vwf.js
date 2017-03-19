@@ -366,6 +366,13 @@
                 { library: "vwf/model/sound", active: false },
                 { library: "vwf/model/object", active: true },
                 { library: "vwf/model/stage/log", active: true },
+
+                  { library: "vwf/model/aframe", 
+                    linkedLibraries: [ "vwf/model/aframe/aframe-v0.5.0" ], 
+                    active: false 
+                },
+
+
                 { library: "vwf/model/kineticjs", 
                     linkedLibraries: [ "vwf/model/kinetic/kinetic.min" ], 
                     active: false 
@@ -399,10 +406,15 @@
                     linkedLibraries: ["vwf/view/webrtc/adapter"],  
                     active: false 
                 },
+                
                 { library: "vwf/view/blockly", active: false },
                 { library: "vwf/view/sound", active: false },
                 { library: "vwf/view/touch", active: false },
                 { library: "vwf/view/cesium", active: false },
+
+                 { library: "vwf/view/aframe", active: false },
+                { library: "vwf/model/aframe/aframe-v0.5.0", active: false },
+
                 { library: "vwf/view/kineticjs", active: false },
                 { library: "vwf/view/mil-sym", active: false },
                 { library: "vwf/view/audio", active: false },
@@ -428,6 +440,8 @@
                 { library: "vwf/model/buzz/buzz.min", active: false }, 
                 { library: "vwf/model/jPlayer.2.7.1/jquery.jplayer.min", active: false },
                 { library: "vwf/admin", active: true }
+
+               
             ];
 
             var initializers = {
@@ -440,11 +454,17 @@
                     { library: "vwf/model/blockly", active: false },
                     { library: "vwf/model/graphtool", active: false },
                     { library: "vwf/model/sound", active: false },
+
+                     { library: "vwf/model/aframe", active: false },
+
                     { library: "vwf/model/kineticjs", active: false },
                     { library: "vwf/model/mil-sym", active: false },
                     { library: "vwf/model/heightmap", active: false },
                     { library: "vwf/model/buzz", active: false },
                     { library: "vwf/model/jPlayer", active: false },
+
+                   
+
                     { library: "vwf/model/object", active: true }
                 ],
                 view: [
@@ -458,10 +478,15 @@
                     { library: "vwf/view/blockly", active: false },
                     { library: "vwf/view/sound", active: false },
                     { library: "vwf/view/touch", active: false },
+
+                      { library: "vwf/view/aframe", active: false },
+
                     { library: "vwf/view/kineticjs", active: false },
                     { library: "vwf/view/mil-sym", active: false },
                     { library: "vwf/view/audio", active: false },
                     { library: "vwf/view/webrtc", active: false}
+
+                  
                 ]
             };
             mapLibraryName(requireArray);
@@ -840,7 +865,7 @@
                     // The socket is relative to the application path.
 
                     // resource: window.location.pathname.slice( 1,
-                    //     window.location.pathname.lastIndexOf("/") ),
+                    //      window.location.pathname.lastIndexOf("/") ),
 
                     query: 'pathname=' + window.location.pathname.slice( 1,
                         window.location.pathname.lastIndexOf("/") ),
@@ -852,6 +877,7 @@
                     // Don't attempt to reestablish lost connections. The client reloads after a
                     // disconnection to recreate the application from scratch.
 
+                    //reconnect: false,
                     reconnection: false,
                     transports: ['websocket']
 
@@ -859,8 +885,8 @@
 
                 if ( isSocketIO07() ) {
 
-                    socket = io.connect( window.location.protocol + "//" + window.location.host,
-                        options );
+            socket = io.connect( window.location.protocol + "//" + window.location.host,options );
+                    
 
                 } else {  // Ruby Server -- only supports socket.io 0.6
 
@@ -888,7 +914,7 @@
 
                     } );
 
-                    socket = io.connect( undefined, options );
+                 socket = io.connect( undefined, options );
                 }
 
             } catch ( e ) {
@@ -920,8 +946,7 @@
                     vwf.logger.infox( "-socket", "connected" );
 
                     if ( isSocketIO07() ) {
-                        //vwf.moniker_ = this.json.namespace.socket.sessionid;   
-                         vwf.moniker_ = this.id;                    
+                        vwf.moniker_ = this.id;                        
                     } else {  //Ruby Server
                         vwf.moniker_ = this.transport.sessionid;
                     }
@@ -4731,8 +4756,8 @@ if ( ! childComponent.source ) {
         // == Private functions ====================================================================
 
         var isSocketIO07 = function() {
-            return true
             //return ( parseFloat( io.version ) >= 0.7 );
+            return true
         }
 
         // -- loadComponent ------------------------------------------------------------------------

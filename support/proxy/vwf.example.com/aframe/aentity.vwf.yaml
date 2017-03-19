@@ -1,0 +1,11 @@
+# https://aframe.io/docs/0.5.0/core/entity.html
+--- 
+extends: http://vwf.example.com/aframe/node.vwf
+type: "a-entity"
+properties:
+  color:
+  position:
+  rotation:
+  wireframe:
+  wireframe-linewidth:
+  clickable:
