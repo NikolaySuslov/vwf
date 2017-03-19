@@ -1,10 +1,9 @@
 # Virtual World Framework & A-Frame integration
 
-Here is **aframe** branch, where you could find the experimental version of VWF driver for [A-Frame](https://aframe.io/).  
+Here is **aframe** branch, where you could find an experimental version of VWF driver for [A-Frame](https://aframe.io/).  
 Now VWF apps could be composed with A-Frame declarative components, that support naturally WebVR and modern HMD tracking controllers.  
 The repository with sample apps is here: https://github.com/NikolaySuslov/vwf-aframe-apps  
 Demo video: https://vimeo.com/209128951
----
 
 # Original documentation from master VWF branch
 # Virtual World Framework
