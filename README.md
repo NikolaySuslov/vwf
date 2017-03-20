@@ -1,5 +1,7 @@
 # Virtual World Framework & A-Frame integration
 
+> This repository is on **ACTIVE** development, expect things could be broken or changed.
+
 ![vwf-aframe](https://krestianstvo.org/books/images/vwf-aframe.jpg)
 
 Here is **aframe** branch, where you could find an experimental version of VWF driver for [A-Frame](https://aframe.io/).  
