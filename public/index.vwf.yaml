@@ -1,61 +1,100 @@
-# Copyright 2012 United States Government, as represented by the Secretary of Defense, Under
-# Secretary of Defense (Personnel & Readiness).
-# 
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
-# in compliance with the License. You may obtain a copy of the License at
-# 
-#   http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software distributed under the License
-# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-# or implied. See the License for the specific language governing permissions and limitations under
-# the License.
-
+# A-Frame & VWF simple scene
+# Copyright 2017 Krestianstvo.org project
 ---
-extends: http://vwf.example.com/scene.vwf
+extends: http://vwf.example.com/aframe/ascene.vwf
 properties:
-  ambientColor: [ 50, 50, 50 ]
+  fog: "type: linear; color: #ECECEC; far: 9; near: 0"
 children:
-  duck:
-    extends: http://vwf.example.com/node3.vwf
-    implements:
-    - http://vwf.example.com/spin-on-click.vwf
-    source: duck/duck.dae
-    type: model/vnd.collada+xml
+  spaceText:
+    extends: http://vwf.example.com/aframe/atext.vwf
     properties:
-      spin-axis: [ 0, 0, 1 ]
-      spin-spinning: true
-  directional1:
-    extends: http://vwf.example.com/light.vwf
+      value: "Virtual World Framework & A-Frame"
+      textColor: "#b74217"
+      position: [-2, 2.5, -2]
+  spaceText2:
+    extends: http://vwf.example.com/aframe/atext.vwf
     properties:
-      lightType: "directional"
-      enable: true
-      intensity: 0.75
-      color: [ 255, 255, 255 ]
-      translation: [ 400, 400, 100 ]
-  directional2:
-    extends: http://vwf.example.com/light.vwf
+      value: "Project by Krestianstvo.org"
+      textColor: "#305b32"
+      position: [1, 3, -4]
+  box:
+    extends: http://vwf.example.com/aframe/abox.vwf
     properties:
-      lightType: "directional"
-      enable: true
-      intensity: 0.33
-      color: [ 255, 255, 255 ]
-      translation: [ -600, 400, -100 ]
-  directional3:
-    extends: http://vwf.example.com/light.vwf
+      position: [-1, 0.5, -3]
+      rotation: [0, -30, 0]
+      color: "#3c7249"
+      depth: 2
+      height: 1
+      width: 1
+      clickable: true
+    events:
+      clickEvent:
+    methods:
+      changeColor:
+    scripts:
+      - |
+        this.changeColor = function(color){
+            //vwf_view.kernel.setProperty(this.id,"color",color);
+            this.color = color;
+            console.log("changed!");
+            } 
+
+        this.clickEvent = function(){
+         vwf_view.kernel.callMethod(this.id, "changeColor", [getRandomColor()]);
+          //this.changeColor(getRandomColor());
+          
+        function getRandomColor(){
+         var letters = '0123456789ABCDEF';
+         var color = '#';
+         for (var i = 0; i < 6; i++) {
+             color += letters[Math.floor(Math.random() * 16)];
+         }
+         return color
+         }}
+  sphere:
+    extends: http://vwf.example.com/aframe/asphere.vwf
     properties:
-      lightType: "directional"
-      enable: true
-      intensity: 0.67
-      color: [ 255, 255, 255 ]
-      translation: [ 0, -400, 100 ]
+      position: [1, 1.25, -4]
+      color: "#e0e014"
+      radius: 1
+      wireframe: true
+    children:
+      box2:
+        extends: http://vwf.example.com/aframe/abox.vwf
+        properties:
+          position: [2, -1.25, 0]
+          color: "#2167a5"
+          depth: 1
+        methods:
+          run:
+        scripts:
+        - |
+          this.run = function(){
+          var time = vwf.now;
+          this.position = [this.position[0], this.position[1], Math.sin(time)]
+          this.future( 0.05 ).run();  // schedule the next step
+          }
+  sky:
+    extends: http://vwf.example.com/aframe/asky.vwf
+    properties:
+      color: "#ECECEC"
+  camentity:
+    extends: http://vwf.example.com/aframe/aentity.vwf
+    properties:
+      position: [0, 0, 0]
+    children:
+      camera:
+        extends: http://vwf.example.com/aframe/acamera.vwf
+        properties:
+          look-controls-enabled: true
+          forAvatar: true
+        children:
+          cursor:
+            extends: http://vwf.example.com/aframe/acursor.vwf
 scripts:
-- |
+  - |
     this.initialize = function(){
-      this.camera.transform = [ -1,   0,  0, 0, 
-                                 0,  -1,  0, 0, 
-                                 0,   0,  1, 0, 
-                                16, 600, 90, 1 ];
-      this.camera.far *= 4;
-      this.camera.navmode = "none";
+      var runBox = vwf_view.kernel.find("", "/sphere/box2")[0];
+      console.log(runBox);
+      vwf_view.kernel.callMethod(runBox, "run");
     }
