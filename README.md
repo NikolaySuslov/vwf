@@ -9,9 +9,11 @@ Now VWF apps could be composed with A-Frame declarative components, that support
 The repository with sample apps is here: https://github.com/NikolaySuslov/vwf-aframe-apps 
 - Demo online: http://demo.krestianstvo.org 
 - Demo video: https://vimeo.com/209128951
+- Blog post: https://krestianstvo.org/blog/en/virtual-world-framework-a-frame/
 
 
-Original documentation from master VWF branch
+> Original documentation from master VWF branch
+
 # Virtual World Framework
 
 The Virtual World Framework (VWF) allows you to build collaborative, immersive applications in the browser. VWF provides:
