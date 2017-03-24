@@ -238,19 +238,27 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                         aframeObject.setAttribute('fog', propertyValue);
                                         break;
                                     case "assets":
-                                        var assets = document.createElement('a-assets');
-                                        aframeObject.appendChild(assets);
+                                        var assetsElement = document.createElement('a-assets');
+                                        aframeObject.appendChild(assetsElement);
                                         if (propertyValue) {
-                                            for (var prop in propertyValue) {
-                                                var elm = document.createElement(propertyValue[prop][0]);
-                                                elm.setAttribute('id', propertyValue[prop][1]);
-                                                elm.setAttribute('src', propertyValue[prop][2]);
-                                                assets.appendChild(elm);
-                                            }
+
+                                            httpGetJson(propertyValue).then(function (response) {
+                                                console.log(JSON.parse(response));
+                                                let assets = JSON.parse(response);
+                                                for (var prop in assets) {
+                                                    var elm = document.createElement(assets[prop].tag);
+                                                    elm.setAttribute('id', prop);
+                                                    elm.setAttribute('src', assets[prop].src);
+                                                    assetsElement.appendChild(elm);
+
+                                                }
+
+                                            }).catch(function (error) {
+                                                console.log(error);
+                                            });
+
                                         }
                                         break;
-
-
                                 }
                             }
 
@@ -259,6 +267,15 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
 
                                     case "depth":
                                         aframeObject.setAttribute('geometry', 'depth', propertyValue);
+                                        break;
+                                }
+                            }
+
+                            if (aframeObject.nodeName == "A-COLLADA-MODEL") {
+                                switch (propertyName) {
+
+                                    case "src":
+                                        aframeObject.setAttribute('src', propertyValue);
                                         break;
                                 }
                             }
@@ -437,6 +454,14 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                             }
                         }
 
+                        if (aframeObject.nodeName == "A-COLLADA-MODEL") {
+                            switch (propertyName) {
+                                case "src":
+                                    value = aframeObject.getAttribute('src');
+                                    break;
+                            }
+                        }
+
                     }
                 }
             }
@@ -466,6 +491,8 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
             aframeObj = document.createElement('a-plane');
         } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/atext.vwf")) {
             aframeObj = document.createElement('a-text');
+        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/acolladamodel.vwf")) {
+            aframeObj = document.createElement('a-collada-model');
         } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/asphere.vwf")) {
             aframeObj = document.createElement('a-sphere');
         } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/aentity.vwf")) {
@@ -559,6 +586,40 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
             return (obj.name == name || obj.id == name || obj.vwfID == name);
         }
     }
+
+    function httpGet(url) {
+        return new Promise(function (resolve, reject) {
+            // do the usual Http request
+            let request = new XMLHttpRequest();
+            request.open('GET', url);
+
+            request.onload = function () {
+                if (request.status == 200) {
+                    resolve(request.response);
+                } else {
+                    reject(Error(request.statusText));
+                }
+            };
+
+            request.onerror = function () {
+                reject(Error('Network Error'));
+            };
+
+            request.send();
+        });
+    }
+    async function httpGetJson(url) {
+        // check if the URL looks like a JSON file and call httpGet.
+        let regex = /\.(json)$/i;
+
+        if (regex.test(url)) {
+            // call the async function, wait for the result
+            return await httpGet(url);
+        } else {
+            throw Error('Bad Url Format');
+        }
+    }
+
 
 });
 

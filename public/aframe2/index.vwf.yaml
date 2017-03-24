@@ -4,8 +4,13 @@
 extends: http://vwf.example.com/aframe/ascene.vwf
 properties:
   fog: "type: linear; color: #ECECEC; far: 9; near: 0"
-  assets: [["img", "bg", "bg.jpg"], ["img", "bg2", "checker.jpg"]]
+  assets: "assets.json"
 children:
+  model:
+    extends: http://vwf.example.com/aframe/acolladamodel.vwf
+    properties:
+      src: "#duck"
+      position: [-1, 1.5, -5]
   spaceText:
     extends: http://vwf.example.com/aframe/atext.vwf
     properties:

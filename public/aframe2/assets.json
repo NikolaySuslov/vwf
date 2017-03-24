@@ -1,0 +1,14 @@
+{
+    "bg":{
+        "tag": "img",
+        "src": "bg.jpg"
+    },
+    "duck":{
+        "tag": "a-asset-item",
+        "src": "duck.dae"
+    },
+     "bg2":{
+        "tag": "img",
+        "src": "checker.jpg"
+    }
+}
