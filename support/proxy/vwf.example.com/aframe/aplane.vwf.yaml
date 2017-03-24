@@ -5,3 +5,5 @@ type: "a-plane"
 properties:
   height:
   width:
+  src:
+  repeat:

@@ -4,4 +4,4 @@ extends: http://vwf.example.com/aframe/aentity.vwf
 type: "a-text"
 properties:
   value:
-  textColor:
+  color:

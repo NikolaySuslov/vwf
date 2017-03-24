@@ -129,6 +129,8 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
             }
 
 
+
+
         },
 
         // -- initializingProperty -----------------------------------------------------------------
@@ -190,11 +192,12 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 case "color":
                                     aframeObject.setAttribute('material', 'color', propertyValue);
                                     break;
+
                                 case "wireframe":
                                     aframeObject.setAttribute('material', 'wireframe', propertyValue);
                                     break;
                                 case "wireframe-linewidth":
-                                    aframeObject.setAttribute('material', 'wireframe-linewidth', propertyValue);
+                                    aframeObject.setAttribute('material', 'wireframeLinewidth', propertyValue);
                                     break;
 
                                 case "clickable":
@@ -204,6 +207,15 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                         });
                                     }
                                     break;
+
+
+                                case "src":
+                                    aframeObject.setAttribute('src', propertyValue);
+                                    break;
+                                case "repeat":
+                                    aframeObject.setAttribute('repeat', propertyValue);
+                                    break;
+
                             }
 
                             if (aframeObject.nodeName == "A-TEXT") {
@@ -213,7 +225,7 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                         aframeObject.setAttribute('text', 'value', propertyValue);
                                         break;
 
-                                    case "textColor":
+                                    case "color":
                                         aframeObject.setAttribute('text', 'color', propertyValue);
                                         break;
 
@@ -225,6 +237,20 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                     case "fog":
                                         aframeObject.setAttribute('fog', propertyValue);
                                         break;
+                                    case "assets":
+                                        var assets = document.createElement('a-assets');
+                                        aframeObject.appendChild(assets);
+                                        if (propertyValue) {
+                                            for (var prop in propertyValue) {
+                                                var elm = document.createElement(propertyValue[prop][0]);
+                                                elm.setAttribute('id', propertyValue[prop][1]);
+                                                elm.setAttribute('src', propertyValue[prop][2]);
+                                                assets.appendChild(elm);
+                                            }
+                                        }
+                                        break;
+
+
                                 }
                             }
 
@@ -241,11 +267,12 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 switch (propertyName) {
 
                                     case "height":
-                                        aframeObject.setAttribute('material', 'height', propertyValue);
+                                        aframeObject.setAttribute('height', propertyValue);
                                         break;
                                     case "width":
-                                        aframeObject.setAttribute('material', 'width', propertyValue);
+                                        aframeObject.setAttribute('width', propertyValue);
                                         break;
+
                                 }
                             }
 
@@ -271,7 +298,7 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
 
                                                 if (evt.detail.name === 'position') {
                                                     self.kernel.fireEvent(node.ID, "setAvatarPosition", evt.detail.newData);
-                                                 
+
                                                 }
                                                 if (evt.detail.name === 'rotation') {
                                                     self.kernel.fireEvent(node.ID, "setAvatarRotation", evt.detail.newData);
@@ -305,7 +332,8 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                 if (isNodeDefinition(node.prototypes)) {
 
                     if (!aframeObject) return value;
-                   // self = this;
+                    // self = this;
+
 
                     if (aframeObject instanceof AFRAME.AEntity) {
 
@@ -330,12 +358,18 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 break;
 
                             case "wireframe-linewidth":
-                                value = aframeObject.getAttribute('material').wireframe - linewidth;
+                                value = aframeObject.getAttribute('material').wireframeLinewidth;
                                 break;
 
                             case "clickable":
                                 value
                                 break;
+
+                            case "src":
+                                value = aframeObject.getAttribute('src');
+                                break;
+                            case "repeat":
+                                value = aframeObject.getAttribute('repeat');
 
                         }
 
@@ -360,11 +394,16 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                             switch (propertyName) {
 
                                 case "height":
-                                    value = aframeObject.getAttribute('material').height;
+                                    value = aframeObject.getAttribute('height');
                                     break;
                                 case "width":
-                                    value = aframeObject.getAttribute('material').width;
+                                    value = aframeObject.getAttribute('width');
                                     break;
+
+
+                                    break;
+
+
                             }
                         }
 
@@ -384,7 +423,7 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                     value = aframeObject.getAttribute('text').value;
                                     break;
 
-                                case "textColor":
+                                case "color":
                                     value = aframeObject.getAttribute('text').color;
                                     break;
                             }
@@ -412,8 +451,8 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
 
         if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/ascene.vwf")) {
             aframeObj = document.createElement('a-scene');
-            self.state.scenes[node.ID] = aframeObj;
 
+            self.state.scenes[node.ID] = aframeObj;
 
         } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/acamera.vwf")) {
             aframeObj = document.createElement('a-camera');
@@ -433,7 +472,6 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
             aframeObj = document.createElement('a-entity');
         }
 
-        aframeObj.id = node.name;
         return aframeObj;
     }
 
