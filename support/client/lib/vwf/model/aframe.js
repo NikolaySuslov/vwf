@@ -75,9 +75,7 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
             };
 
             this.state.kernel = this.kernel.kernel.kernel;
-
-
-        },
+    },
 
         // == Model API ============================================================================
 
@@ -190,14 +188,14 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                     break;
 
                                 case "color":
-                                    aframeObject.setAttribute('material', 'color', propertyValue);
+                                    aframeObject.setAttribute('color', propertyValue);
                                     break;
 
                                 case "wireframe":
-                                    aframeObject.setAttribute('material', 'wireframe', propertyValue);
+                                    aframeObject.setAttribute('wireframe', propertyValue);
                                     break;
                                 case "wireframe-linewidth":
-                                    aframeObject.setAttribute('material', 'wireframeLinewidth', propertyValue);
+                                    aframeObject.setAttribute('wireframeLinewidth', propertyValue);
                                     break;
 
                                 case "clickable":
@@ -222,11 +220,11 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 switch (propertyName) {
 
                                     case "value":
-                                        aframeObject.setAttribute('text', 'value', propertyValue);
+                                        aframeObject.setAttribute('value', propertyValue);
                                         break;
 
                                     case "color":
-                                        aframeObject.setAttribute('text', 'color', propertyValue);
+                                        aframeObject.setAttribute('color', propertyValue);
                                         break;
 
                                 }
@@ -263,13 +261,41 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                             }
 
                             if (aframeObject.nodeName == "A-BOX") {
+                               //"depth", "height", "width", "segments-depth", "segments-height", "segments-width"
                                 switch (propertyName) {
 
                                     case "depth":
-                                        aframeObject.setAttribute('geometry', 'depth', propertyValue);
+                                        aframeObject.setAttribute('depth', propertyValue);
+                                        break;
+                                    case "height":
+                                        aframeObject.setAttribute('height', propertyValue);
+                                        break;
+                                    case "width":
+                                        aframeObject.setAttribute('width', propertyValue);
                                         break;
                                 }
                             }
+
+                            if (aframeObject.nodeName == "A-LIGHT") {
+                                  //"angle", "color", "decay", "distance", "ground-color", "intensity", "penumbra", "type", "target"
+                                   switch (propertyName) {
+
+                                    case "color":
+                                        aframeObject.setAttribute('color', propertyValue);
+                                        break;
+                                     case "type":
+                                        aframeObject.setAttribute('type', propertyValue);
+                                        break;
+                                    case "intensity":
+                                        aframeObject.setAttribute('intensity', propertyValue);
+                                        break;
+                                    case "distance":
+                                        aframeObject.setAttribute('distance', propertyValue);
+                                        break;
+                                }
+                               
+                            }
+
 
                             if (aframeObject.nodeName == "A-COLLADA-MODEL") {
                                 switch (propertyName) {
@@ -297,7 +323,7 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 switch (propertyName) {
 
                                     case "radius":
-                                        aframeObject.setAttribute('geometry', 'radius', propertyValue);
+                                        aframeObject.setAttribute('radius', propertyValue);
                                         break;
                                 }
                             }
@@ -367,15 +393,15 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 break;
 
                             case "color":
-                                value = aframeObject.getAttribute('material').color;
+                                value = aframeObject.getAttribute('color');
                                 break;
 
                             case "wireframe":
-                                value = aframeObject.getAttribute('material').wireframe;
+                                value = aframeObject.getAttribute('wireframe');
                                 break;
 
                             case "wireframe-linewidth":
-                                value = aframeObject.getAttribute('material').wireframeLinewidth;
+                                value = aframeObject.getAttribute('wireframeLinewidth');
                                 break;
 
                             case "clickable":
@@ -401,12 +427,38 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
 
                         if (aframeObject.nodeName == "A-BOX") {
                             switch (propertyName) {
-
                                 case "depth":
-                                    value = aframeObject.getAttribute('geometry').depth;
+                                    value = aframeObject.getAttribute('depth');
                                     break;
+                                case "height":
+                                    value = aframeObject.getAttribute('height');
+                                    break;
+                                case "width":
+                                    value = aframeObject.getAttribute('width');
+                                    break;
+
                             }
                         }
+
+                        if (aframeObject.nodeName == "A-LIGHT") {
+                           //"angle", "color", "decay", "distance", "ground-color", "intensity", "penumbra", "type", "target"
+                           switch (propertyName) {
+                                case "color":
+                                    value = aframeObject.getAttribute('color');
+                                    break;
+                                case "type":
+                                    value = aframeObject.getAttribute('type');
+                                    break;
+                                case "distance":
+                                    value = aframeObject.getAttribute('distance');
+                                    break;
+                                case "intensity":
+                                    value = aframeObject.getAttribute('intensity');
+                                    break;
+                                }
+
+                        }
+
                         if (aframeObject.nodeName == "A-PLANE") {
                             switch (propertyName) {
 
@@ -417,10 +469,6 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                     value = aframeObject.getAttribute('width');
                                     break;
 
-
-                                    break;
-
-
                             }
                         }
 
@@ -428,7 +476,7 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                             switch (propertyName) {
 
                                 case "radius":
-                                    value = aframeObject.getAttribute('geometry').radius;
+                                    value = aframeObject.getAttribute('radius');
                                     break;
                             }
                         }
@@ -437,11 +485,11 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                             switch (propertyName) {
 
                                 case "value":
-                                    value = aframeObject.getAttribute('text').value;
+                                    value = aframeObject.getAttribute('value');
                                     break;
 
                                 case "color":
-                                    value = aframeObject.getAttribute('text').color;
+                                    value = aframeObject.getAttribute('color');
                                     break;
                             }
                         }
@@ -470,155 +518,157 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
         }
     });
 
-    function createAFrameObject(node, config) {
-        var protos = node.prototypes;
-        var aframeObj = undefined;
+function createAFrameObject(node, config) {
+    var protos = node.prototypes;
+    var aframeObj = undefined;
 
-        if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/ascene.vwf")) {
-            aframeObj = document.createElement('a-scene');
+    if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/ascene.vwf")) {
+        aframeObj = document.createElement('a-scene');
 
-            self.state.scenes[node.ID] = aframeObj;
+        self.state.scenes[node.ID] = aframeObj;
 
-        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/acamera.vwf")) {
-            aframeObj = document.createElement('a-camera');
-        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/acursor.vwf")) {
-            aframeObj = document.createElement('a-cursor');
-        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/asky.vwf")) {
-            aframeObj = document.createElement('a-sky');
-        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/abox.vwf")) {
-            aframeObj = document.createElement('a-box');
-        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/aplane.vwf")) {
-            aframeObj = document.createElement('a-plane');
-        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/atext.vwf")) {
-            aframeObj = document.createElement('a-text');
-        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/acolladamodel.vwf")) {
-            aframeObj = document.createElement('a-collada-model');
-        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/asphere.vwf")) {
-            aframeObj = document.createElement('a-sphere');
-        } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/aentity.vwf")) {
-            aframeObj = document.createElement('a-entity');
-        }
-
-        return aframeObj;
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/acamera.vwf")) {
+        aframeObj = document.createElement('a-camera');
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/alight.vwf")) {
+        aframeObj = document.createElement('a-light');
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/acursor.vwf")) {
+        aframeObj = document.createElement('a-cursor');
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/asky.vwf")) {
+        aframeObj = document.createElement('a-sky');
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/abox.vwf")) {
+        aframeObj = document.createElement('a-box');
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/aplane.vwf")) {
+        aframeObj = document.createElement('a-plane');
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/atext.vwf")) {
+        aframeObj = document.createElement('a-text');
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/acolladamodel.vwf")) {
+        aframeObj = document.createElement('a-collada-model');
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/asphere.vwf")) {
+        aframeObj = document.createElement('a-sphere');
+    } else if (self.state.isAFrameClass(protos, "http://vwf.example.com/aframe/aentity.vwf")) {
+        aframeObj = document.createElement('a-entity');
     }
 
-    function addNodeToHierarchy(node) {
+    return aframeObj;
+}
 
-        if (node.aframeObj) {
-            if (self.state.nodes[node.parentID] !== undefined) {
-                var parent = self.state.nodes[node.parentID];
-                if (parent.aframeObj) {
+function addNodeToHierarchy(node) {
 
-                    if (parent.children === undefined) {
-                        parent.children = [];
-                    }
-                    parent.children.push(node.ID);
-                    //console.info( "Adding child: " + childID + " to " + nodeID );
-                    parent.aframeObj.appendChild(node.aframeObj);
+    if (node.aframeObj) {
+        if (self.state.nodes[node.parentID] !== undefined) {
+            var parent = self.state.nodes[node.parentID];
+            if (parent.aframeObj) {
+
+                if (parent.children === undefined) {
+                    parent.children = [];
+                }
+                parent.children.push(node.ID);
+                //console.info( "Adding child: " + childID + " to " + nodeID );
+                parent.aframeObj.appendChild(node.aframeObj);
+            }
+        }
+        if (node.aframeObj.nodeName !== "A-SCENE") {
+            node.scene = self.state.scenes[self.kernel.application()];
+        }
+
+    }
+
+}
+
+
+function getPrototypes(kernel, extendsID) {
+    var prototypes = [];
+    var id = extendsID;
+
+    while (id !== undefined) {
+        prototypes.push(id);
+        id = kernel.prototype(id);
+    }
+    return prototypes;
+}
+
+function isNodeDefinition(prototypes) {
+    var found = false;
+    if (prototypes) {
+        for (var i = 0; i < prototypes.length && !found; i++) {
+            found = (prototypes[i] == "http://vwf.example.com/aframe/node.vwf");
+        }
+    }
+    return found;
+}
+
+
+// Changing this function significantly from the GLGE code
+// Will search hierarchy down until encountering a matching child
+// Will look into nodes that don't match.... this might not be desirable
+function FindChildByName(obj, childName, childType, recursive) {
+
+    var child = undefined;
+    if (recursive) {
+
+        // TODO: If the obj itself has the child name, the object will be returned by this function
+        //       I don't think this this desirable.
+
+        if (nameTest.call(this, obj, childName)) {
+            child = obj;
+        } else if (obj.children && obj.children.length > 0) {
+            for (var i = 0; i < obj.children.length && child === undefined; i++) {
+                child = FindChildByName(obj.children[i], childName, childType, true);
+            }
+        }
+    } else {
+        if (obj.children) {
+            for (var i = 0; i < obj.children.length && child === undefined; i++) {
+                if (nameTest.call(this, obj.children[i], childName)) {
+                    child = obj.children[i];
                 }
             }
-            if (node.aframeObj.nodeName !== "A-SCENE") {
-                node.scene = self.state.scenes[self.kernel.application()];
+        }
+    }
+    return child;
+
+}
+
+function nameTest(obj, name) {
+    if (obj.name == "") {
+        return (obj.parent.name + "Child" == name);
+    } else {
+        return (obj.name == name || obj.id == name || obj.vwfID == name);
+    }
+}
+
+function httpGet(url) {
+    return new Promise(function (resolve, reject) {
+        // do the usual Http request
+        let request = new XMLHttpRequest();
+        request.open('GET', url);
+
+        request.onload = function () {
+            if (request.status == 200) {
+                resolve(request.response);
+            } else {
+                reject(Error(request.statusText));
             }
+        };
 
-        }
+        request.onerror = function () {
+            reject(Error('Network Error'));
+        };
 
+        request.send();
+    });
+}
+async function httpGetJson(url) {
+    // check if the URL looks like a JSON file and call httpGet.
+    let regex = /\.(json)$/i;
+
+    if (regex.test(url)) {
+        // call the async function, wait for the result
+        return await httpGet(url);
+    } else {
+        throw Error('Bad Url Format');
     }
-
-
-    function getPrototypes(kernel, extendsID) {
-        var prototypes = [];
-        var id = extendsID;
-
-        while (id !== undefined) {
-            prototypes.push(id);
-            id = kernel.prototype(id);
-        }
-        return prototypes;
-    }
-
-    function isNodeDefinition(prototypes) {
-        var found = false;
-        if (prototypes) {
-            for (var i = 0; i < prototypes.length && !found; i++) {
-                found = (prototypes[i] == "http://vwf.example.com/aframe/node.vwf");
-            }
-        }
-        return found;
-    }
-
-
-    // Changing this function significantly from the GLGE code
-    // Will search hierarchy down until encountering a matching child
-    // Will look into nodes that don't match.... this might not be desirable
-    function FindChildByName(obj, childName, childType, recursive) {
-
-        var child = undefined;
-        if (recursive) {
-
-            // TODO: If the obj itself has the child name, the object will be returned by this function
-            //       I don't think this this desirable.
-
-            if (nameTest.call(this, obj, childName)) {
-                child = obj;
-            } else if (obj.children && obj.children.length > 0) {
-                for (var i = 0; i < obj.children.length && child === undefined; i++) {
-                    child = FindChildByName(obj.children[i], childName, childType, true);
-                }
-            }
-        } else {
-            if (obj.children) {
-                for (var i = 0; i < obj.children.length && child === undefined; i++) {
-                    if (nameTest.call(this, obj.children[i], childName)) {
-                        child = obj.children[i];
-                    }
-                }
-            }
-        }
-        return child;
-
-    }
-
-    function nameTest(obj, name) {
-        if (obj.name == "") {
-            return (obj.parent.name + "Child" == name);
-        } else {
-            return (obj.name == name || obj.id == name || obj.vwfID == name);
-        }
-    }
-
-    function httpGet(url) {
-        return new Promise(function (resolve, reject) {
-            // do the usual Http request
-            let request = new XMLHttpRequest();
-            request.open('GET', url);
-
-            request.onload = function () {
-                if (request.status == 200) {
-                    resolve(request.response);
-                } else {
-                    reject(Error(request.statusText));
-                }
-            };
-
-            request.onerror = function () {
-                reject(Error('Network Error'));
-            };
-
-            request.send();
-        });
-    }
-    async function httpGetJson(url) {
-        // check if the URL looks like a JSON file and call httpGet.
-        let regex = /\.(json)$/i;
-
-        if (regex.test(url)) {
-            // call the async function, wait for the result
-            return await httpGet(url);
-        } else {
-            throw Error('Bad Url Format');
-        }
-    }
+}
 
 
 });

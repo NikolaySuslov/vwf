@@ -6,6 +6,13 @@ properties:
   fog: "type: linear; color: #ECECEC; far: 9; near: 0"
   assets: "assets.json"
 children:
+  myLight:
+    extends: http://vwf.example.com/aframe/alight.vwf
+    properties:
+      type: "spot"
+      color: "white"
+      position: [0, 5, 5]
+      rotation: [0, 0, 0]
   model:
     extends: http://vwf.example.com/aframe/acolladamodel.vwf
     properties:
