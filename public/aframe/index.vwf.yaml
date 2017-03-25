@@ -9,13 +9,13 @@ children:
     extends: http://vwf.example.com/aframe/atext.vwf
     properties:
       value: "Virtual World Framework & A-Frame"
-      textColor: "#b74217"
+      color: "#b74217"
       position: [-2, 2.5, -2]
   spaceText2:
     extends: http://vwf.example.com/aframe/atext.vwf
     properties:
       value: "Project by Krestianstvo.org"
-      textColor: "#305b32"
+      color: "#305b32"
       position: [1, 3, -4]
   box:
     extends: http://vwf.example.com/aframe/abox.vwf

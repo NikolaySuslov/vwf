@@ -408,7 +408,9 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 break;
                             
                             case "fog":
-                                value = aframeObject.getAttribute('material').fog;
+                                if (aframeObject.getAttribute('material')){
+                                    value = aframeObject.getAttribute('material').fog;
+                                }
                                 break;
 
                             case "wireframe":
