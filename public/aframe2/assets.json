@@ -3,9 +3,17 @@
         "tag": "img",
         "src": "bg.jpg"
     },
+    "sky":{
+        "tag": "img",
+        "src": "skyes/sky3.jpg"
+    },
     "duck":{
         "tag": "a-asset-item",
         "src": "duck.dae"
+    },
+    "plane":{
+        "tag": "a-asset-item",
+        "src": "plane.dae"
     },
      "bg2":{
         "tag": "img",

@@ -6,8 +6,10 @@ properties:
   color:
   position:
   rotation:
+  scale:
   wireframe:
   wireframe-linewidth:
   clickable:
   src:
   repeat:
+  fog:

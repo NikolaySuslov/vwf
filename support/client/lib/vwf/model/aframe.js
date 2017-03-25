@@ -186,9 +186,16 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 case "rotation":
                                     aframeObject.setAttribute('rotation', { x: propertyValue[0], y: propertyValue[1], z: propertyValue[2] });
                                     break;
+                                case "scale":
+                                    aframeObject.setAttribute('scale', { x: propertyValue[0], y: propertyValue[1], z: propertyValue[2] });
+                                    break;
 
                                 case "color":
                                     aframeObject.setAttribute('color', propertyValue);
+                                    break;
+
+                                case "fog":
+                                    aframeObject.setAttribute('material','fog', propertyValue);
                                     break;
 
                                 case "wireframe":
@@ -386,6 +393,10 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 var pos = aframeObject.getAttribute('position');
                                 value = [pos.x, pos.y, pos.z];
                                 break;
+                            case "scale":
+                                var pos = aframeObject.getAttribute('scale');
+                                value = [pos.x, pos.y, pos.z];
+                                break;
 
                             case "rotation":
                                 var rot = aframeObject.getAttribute('rotation');
@@ -394,6 +405,10 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
 
                             case "color":
                                 value = aframeObject.getAttribute('color');
+                                break;
+                            
+                            case "fog":
+                                value = aframeObject.getAttribute('material').fog;
                                 break;
 
                             case "wireframe":
