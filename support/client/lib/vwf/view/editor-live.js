@@ -1268,8 +1268,8 @@ define( [
 
     // -- viewScript ------------------------------------------------------------------------
 
-    function createAceEditor(from) {
-        var editor = from.ace.edit("editorlive");
+    function createAceEditor(view) {
+        var editor = view.ace.edit("editorlive");
         editor.setTheme("ace/theme/monokai");
         editor.setFontSize(16);
         editor.getSession().setMode("ace/mode/javascript");
@@ -1371,13 +1371,40 @@ define( [
         var methodNameAlpha = $.encoder.encodeForAlphaNumeric(methodName);
         var methodNameHTML = $.encoder.encodeForHTML(methodName);
      
-        $(topdownTemp).html("<div class='header'><img src='images/back.png' id='" + methodNameAlpha + "-back' alt='back'/> " + methodNameHTML + "<input type='button' class='input_button_call' id='call' value='Call' style='float:right;position:relative;top:5px;right:33px'></input></div>");
+        $(topdownTemp).html("<div class='header'><img src='images/back.png' id='" + methodNameAlpha + "-back' alt='back'/> " + methodNameHTML + "</div>");
         $('#' + methodNameAlpha + '-back').click ( function(evt) {
             
-            drillUp.call(self, nodeID);
+             self.editingScript = false;
+
+             drillUp.call(self, nodeID);
+
+            // Return editor to normal width
+            $('#editor').animate({ 'left' : "-260px" }, 175);
+            $('.vwf-tree').animate({ 'width' : "260px" }, 175);
+
+            
         });
 
-        for(var i=1; i<=16; i++)
+            var nodeIDAlpha = $.encoder.encodeForAlphaNumeric(nodeID);
+
+            var method = vwf.getMethod(nodeID, methodNameAlpha);
+
+          $(topdownTemp).append("<div id='editorlive'>" + method.body + "</div><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + methodNameAlpha + "' value='Update' />");
+
+          
+
+        var editor = createAceEditor(self);
+
+          $("#update-" + nodeIDAlpha + "-" + methodNameAlpha).click ( function(evt) {
+                var evalText = editor.getValue();
+                self.kernel.setMethod( nodeID, methodNameAlpha,
+                { body: evalText, type: "application/javascript", parameters: method.parameters } );
+            });
+
+            let params = method.parameters.length;
+          if (params >= 1) {
+
+        for(var i=1; i<=params; i++)
         {
             $(topdownTemp).append("<div id='param" + i + "' class='propEntry'><table><tr><td><b>Parameter " + i + ": </b></td><td><input type='text' class='input_text' id='input-param" + i + "'></td></tr></table></div>");
             $('#input-param'+ i).keydown( function(evt) {
@@ -1390,11 +1417,15 @@ define( [
                 evt.stopPropagation();
             });
         }
+          }
+
+           $(topdownTemp).append("<input class='update_button' type='button' id='call' value='Call' />");
 
         $('#call').click ( function (evt) {
 
+            if (params >= 1) {
             var parameters = new Array();
-            for(var i=1; i<=16; i++)
+            for(var i=1; i<=params; i++)
             {
                 if( $('#input-param'+ i).val() )
                 {
@@ -1407,7 +1438,8 @@ define( [
                     }
                 }
             }
-
+        }
+        
             self.kernel.callMethod(nodeID, methodName, parameters);
         });
 
