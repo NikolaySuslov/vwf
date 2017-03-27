@@ -1268,6 +1268,28 @@ define( [
 
     // -- viewScript ------------------------------------------------------------------------
 
+    function createAceEditor(from) {
+        var editor = from.ace.edit("editorlive");
+        editor.setTheme("ace/theme/monokai");
+        editor.setFontSize(16);
+        editor.getSession().setMode("ace/mode/javascript");
+
+        editor.on('focus', function (event, editor) {
+            // Expand the script editor
+            self.editingScript = true;
+            $('#editor').animate({ 'left': "-800px" }, 175);
+            $('.vwf-tree').animate({ 'width': "800px" }, 175);
+        });
+
+        editor.on('blur', function (event, editor) {
+            //$(editor.container).animate({ width: 300 });
+        });
+
+        return editor;
+
+    }
+
+
     function viewScript (nodeID, scriptID, extendsID) // invoke with the view as "this"
     {
         var self = this;
@@ -1298,25 +1320,21 @@ define( [
             // $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'><textarea id='scriptTextArea' class='scriptEdit' spellcheck='false' wrap='off'>" + scriptText + "</textarea></pre><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + scriptID + "' value='Update' /></div><hr>");
 
              //Open Live Editor
-         $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'> <div id='editorlive'>" + scriptText + "</div></pre><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + scriptID + "' value='Update' /></div><hr>");
+        
+        
 
-         var editor = this.ace.edit("editorlive");
-        editor.setTheme("ace/theme/monokai");
-        editor.setFontSize(16);
-        editor.getSession().setMode("ace/mode/javascript");
+         $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'> <div id='editorlive'>" + scriptText + "</div></pre><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + scriptID + "' value='Update' /><div style='padding:6px'><input class='live_button' type='button' id='doit-" + nodeIDAlpha + "-" + scriptID + "' value='DoIt' /></div></div><hr>");
 
-     editor.on('focus', function(event, editor) {
-          // Expand the script editor
-            self.editingScript = true;
-            $('#editor').animate({ 'left' : "-800px" }, 175);
-            $('.vwf-tree').animate({ 'width' : "800px" }, 175);
-    });
+         var editor = createAceEditor(self);
 
-    editor.on('blur', function(event, editor) {
-        //$(editor.container).animate({ width: 300 });
-    });
+        //  $(topdownTemp).append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
+         $("#doit-" + nodeIDAlpha + "-" + scriptID).click(function(evt) {
+              var s_id = $(this).attr("id").substring($(this).attr("id").lastIndexOf('-') + 1);
+                self.allScripts[nodeID][s_id].text = undefined;;
+            codeEditorDoit.call(self, editor, nodeID);
+        });
 
-
+        
             $("#update-" + nodeIDAlpha + "-" + scriptID).click ( function(evt) {
                 var s_id = $(this).attr("id").substring($(this).attr("id").lastIndexOf('-') + 1);
                 self.allScripts[nodeID][s_id].text = undefined;
@@ -1746,7 +1764,8 @@ function showCodeEditorTab() // invoke with the view as "this"
 
      $('#codeEditor_tab').append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
          $('#doit').click(function(evt) {
-            codeEditorDoit.call(self, editor);
+             var sceneID = self.kernel.application();
+            codeEditorDoit.call(self, editor, sceneID);
         });
 
             this.codeEditorInit = true;
@@ -1764,7 +1783,7 @@ function showCodeEditorTab() // invoke with the view as "this"
         }
     }
 
-    function codeEditorDoit(editor)
+    function codeEditorDoit(editor, nodeID)
 		{
 			var selectedText = editor.getSession().doc.getTextRange(editor.selection.getRange());
 
@@ -1776,8 +1795,8 @@ function showCodeEditorTab() // invoke with the view as "this"
 			}
 
 			//console.log(selectedText);
-            var sceneID = self.kernel.application();
-			vwf_view.kernel.execute(sceneID, selectedText, 'application/javascript');
+            //var sceneID = self.kernel.application();
+			self.kernel.execute(nodeID, selectedText);
 
 		}
 
