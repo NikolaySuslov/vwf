@@ -72,7 +72,7 @@ define( [
 
             this.activeCameraID = undefined;
             
-           $(document.head).append('<style type="text/css" media="screen"> #editorlive { height: 500px; width: 600px; } </style>');
+           $(document.head).append('<style type="text/css" media="screen"> #editorlive { height: 500px; width: 800px; } </style>');
 
             $('body').append(
                 "<div id='editor' class='relClass'>\n" +
@@ -1223,17 +1223,39 @@ define( [
             $('.vwf-tree').animate({ 'width' : "260px" }, 175);
         });
 
-        $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'><textarea id='newScriptArea' class='scriptEdit' spellcheck='false' wrap='off'></textarea></pre><input class='update_button' type='button' id='create-" + nodeIDAlpha + "' value='Create' /></div><hr>");
-        $("#create-" + nodeIDAlpha).click ( function(evt) {
-            self.kernel.execute( nodeID, $("#newScriptArea").val() );
-        });
-        $('#newScriptArea').focus( function(evt) { 
-            // Expand the script editor
+        // $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'><textarea id='newScriptArea' class='scriptEdit' spellcheck='false' wrap='off'></textarea></pre><input class='update_button' type='button' id='create-" + nodeIDAlpha + "' value='Create' /></div><hr>");
+
+          $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'> <div id='editorlive'></div></pre><input class='update_button' type='button' id='create-" + nodeIDAlpha + "' value='Create' /></div><hr>");
+
+            var editor = this.ace.edit("editorlive");
+        editor.setTheme("ace/theme/monokai");
+        editor.setFontSize(16);
+        editor.getSession().setMode("ace/mode/javascript");
+
+     editor.on('focus', function(event, editor) {
+          // Expand the script editor
             self.editingScript = true;
-            $('#editor').animate({ 'left' : "-500px" }, 175);
-            $('.vwf-tree').animate({ 'width' : "500px" }, 175);
+            $('#editor').animate({ 'left' : "-800px" }, 175);
+            $('.vwf-tree').animate({ 'width' : "800px" }, 175);
+    });
+
+    editor.on('blur', function(event, editor) {
+        //$(editor.container).animate({ width: 300 });
+    });
+
+
+        $("#create-" + nodeIDAlpha).click ( function(evt) {
+            self.kernel.execute( nodeID, editor.getValue() );
+           // self.kernel.execute( nodeID, $("#newScriptArea").val() );
         });
-        $('#newScriptArea').keydown( function(evt) { 
+
+        // $('#newScriptArea').focus( function(evt) { 
+        //     // Expand the script editor
+        //     self.editingScript = true;
+        //     $('#editor').animate({ 'left' : "-500px" }, 175);
+        //     $('.vwf-tree').animate({ 'width' : "500px" }, 175);
+        // });
+        $('#editorlive').keydown( function(evt) { 
             evt.stopPropagation();
         });
 
@@ -1286,8 +1308,8 @@ define( [
      editor.on('focus', function(event, editor) {
           // Expand the script editor
             self.editingScript = true;
-            $('#editor').animate({ 'left' : "-600px" }, 175);
-            $('.vwf-tree').animate({ 'width' : "600px" }, 175);
+            $('#editor').animate({ 'left' : "-800px" }, 175);
+            $('.vwf-tree').animate({ 'width' : "800px" }, 175);
     });
 
     editor.on('blur', function(event, editor) {
@@ -1298,7 +1320,7 @@ define( [
             $("#update-" + nodeIDAlpha + "-" + scriptID).click ( function(evt) {
                 var s_id = $(this).attr("id").substring($(this).attr("id").lastIndexOf('-') + 1);
                 self.allScripts[nodeID][s_id].text = undefined;
-                
+
                 var evalText = editor.getValue();
                 self.kernel.execute( nodeID, evalText );
             });
@@ -1712,8 +1734,8 @@ function showCodeEditorTab() // invoke with the view as "this"
      editor.on('focus', function(event, editor) {
           // Expand the script editor
             self.editingScript = true;
-            $('#editor').animate({ 'left' : "-600px" }, 175);
-            $('.vwf-tree').animate({ 'width' : "600px" }, 175);
+            $('#editor').animate({ 'left' : "-800px" }, 175);
+            $('.vwf-tree').animate({ 'width' : "800px" }, 175);
     });
 
     editor.on('blur', function(event, editor) {
