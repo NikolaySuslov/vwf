@@ -72,7 +72,7 @@ define( [
 
             this.activeCameraID = undefined;
             
-           $(document.head).append('<style type="text/css" media="screen"> #editorlive { height: 300px; } </style>');
+           $(document.head).append('<style type="text/css" media="screen"> #editorlive { height: 500px; width: 600px; } </style>');
 
             $('body').append(
                 "<div id='editor' class='relClass'>\n" +
@@ -1273,19 +1273,42 @@ define( [
         var scriptText = self.allScripts[nodeID][scriptID].text;
         if(scriptText != undefined)
         {
-            $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'><textarea id='scriptTextArea' class='scriptEdit' spellcheck='false' wrap='off'>" + scriptText + "</textarea></pre><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + scriptID + "' value='Update' /></div><hr>");
+            // $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'><textarea id='scriptTextArea' class='scriptEdit' spellcheck='false' wrap='off'>" + scriptText + "</textarea></pre><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + scriptID + "' value='Update' /></div><hr>");
+
+             //Open Live Editor
+         $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'> <div id='editorlive'>" + scriptText + "</div></pre><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + scriptID + "' value='Update' /></div><hr>");
+
+         var editor = this.ace.edit("editorlive");
+        editor.setTheme("ace/theme/monokai");
+        editor.setFontSize(16);
+        editor.getSession().setMode("ace/mode/javascript");
+
+     editor.on('focus', function(event, editor) {
+          // Expand the script editor
+            self.editingScript = true;
+            $('#editor').animate({ 'left' : "-600px" }, 175);
+            $('.vwf-tree').animate({ 'width' : "600px" }, 175);
+    });
+
+    editor.on('blur', function(event, editor) {
+        //$(editor.container).animate({ width: 300 });
+    });
+
+
             $("#update-" + nodeIDAlpha + "-" + scriptID).click ( function(evt) {
                 var s_id = $(this).attr("id").substring($(this).attr("id").lastIndexOf('-') + 1);
                 self.allScripts[nodeID][s_id].text = undefined;
-                self.kernel.execute( nodeID, $("#scriptTextArea").val() );
+                
+                var evalText = editor.getValue();
+                self.kernel.execute( nodeID, evalText );
             });
-            $('#scriptTextArea').focus( function(evt) { 
-                // Expand the script editor
-                self.editingScript = true;
-                $('#editor').animate({ 'left' : "-500px" }, 175);
-                $('.vwf-tree').animate({ 'width' : "500px" }, 175);
-            });
-            $('#scriptTextArea').keydown( function(evt) { 
+            // $('#editorlive').focus( function(evt) { 
+            //     // Expand the script editor
+            //     self.editingScript = true;
+            //     $('#editor').animate({ 'left' : "-500px" }, 175);
+            //     $('.vwf-tree').animate({ 'width' : "500px" }, 175);
+            // });
+            $('#editorlive').keydown( function(evt) { 
                 evt.stopPropagation();
             });
         }
@@ -1673,15 +1696,31 @@ function showCodeEditorTab() // invoke with the view as "this"
 
         if(!this.codeEditorInit)
         {
-            $('#codeEditor_tab').append("<div class='header'>Code Editor</div>" + 
-                "<div class='codeEditor'><p style='font:bold 12pt Arial'>Live Code Editor</p>" +
-                "</div>");
+            $('#codeEditor_tab').append("<div class='header'>Live Code Editor</div>");
 
         //Open Live Editor
          $('#codeEditor_tab').append('<div id="editorlive">console.log("test")</div>');
          var editor = this.ace.edit("editorlive");
      editor.setTheme("ace/theme/monokai");
+     editor.setFontSize(16);
+     //editor.setOption("showPrintMargin", false);
+//      editor.setOptions({
+//   fontSize: "14pt"
+// });
      editor.getSession().setMode("ace/mode/javascript");
+
+     editor.on('focus', function(event, editor) {
+          // Expand the script editor
+            self.editingScript = true;
+            $('#editor').animate({ 'left' : "-600px" }, 175);
+            $('.vwf-tree').animate({ 'width' : "600px" }, 175);
+    });
+
+    editor.on('blur', function(event, editor) {
+        //$(editor.container).animate({ width: 300 });
+    });
+
+    
 
      $('#codeEditor_tab').append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
          $('#doit').click(function(evt) {
