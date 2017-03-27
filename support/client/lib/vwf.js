@@ -393,6 +393,7 @@
                 { library: "vwf/kernel/view", active: true },
                 { library: "vwf/view/document", active: true },
             	{ library: "vwf/view/editor", active: false },
+                { library: "vwf/view/editor-live", active: false },
                 { library: "vwf/view/glge", 
                     disabledBy: ["vwf/model/threejs", "vwf/view/threejs"], 
                     active: false 
@@ -472,6 +473,7 @@
                     { library: "vwf/view/threejs", parameters: {"application-root":"#vwf-root"}, active: false },
                     { library: "vwf/view/document", active: true },
                 	{ library: "vwf/view/editor", active: false },
+                    { library: "vwf/view/editor-live", active: false },
                     { library: "vwf/view/lesson", active: false},
                     { library: "vwf/view/google-earth", active: false },
                     { library: "vwf/view/cesium", active: false },
