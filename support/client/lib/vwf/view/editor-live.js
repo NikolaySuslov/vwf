@@ -1149,6 +1149,15 @@ define( [
 
         $('#prototypeBehaviors > div:last').css('border-bottom-width', '3px');
 
+        // Create new method
+
+        $(topdownTemp).append("<div id='createMethodID'></div>");
+        $('#createMethodID').append("<div class='childContainer'><div class='childEntry'><b>New Method</div></div>");
+        $('#createMethodID').click( function (evt) {
+            createMethod.call(self, nodeID);
+        });
+
+
         // Create new script
         $(topdownTemp).append("<div id='createScript'></div>");
         $('#createScript').append("<div class='childContainer'><div class='childEntry'><b>New Script</div></div>");
@@ -1202,6 +1211,68 @@ define( [
         updateCameraProperties.call(self);
     }
 
+    // -- createdMethod
+
+     function createMethod (nodeID) // invoke with the view as "this"
+    {
+        var self = this;
+        var topdownName = this.topdownName;
+        var topdownTemp = this.topdownTemp;
+
+        var nodeIDAlpha = $.encoder.encodeForAlphaNumeric(nodeID);
+        
+        $(topdownTemp).html("<div class='header'><img src='images/back.png' id='script-" + nodeIDAlpha + "-back' alt='back'/> New method</div>");
+        $('#script-' + nodeIDAlpha + '-back').click ( function(evt) {
+            self.editingScript = false;
+            drillBack.call(self, nodeID);
+
+            // Return editor to normal width
+            $('#editor').animate({ 'left' : "-260px" }, 175);
+            $('.vwf-tree').animate({ 'width' : "260px" }, 175);
+        });
+
+        $(topdownTemp).append("<div id='cm'>Name:<br/><input type='text' class='input_text' id='methodName'/><br/>Parameters:<br/><input type='text' class='input_text' id='methodParams'/></div><hr><input class='update_button' type='button' id='createMethod' value='Create' />");
+
+
+        $("#createMethod").click ( function(evt) {
+            console.log("not yet created");
+
+              
+                if( $('#methodName').val() )
+                {
+                    var methodName = $('#methodName').val();
+                    //prmtr = JSON.parse(JSON.stringify($.encoder.canonicalize(prmtr)));
+                    console.log(methodName);
+                
+                if( $('#methodParams').val() )
+                {
+                    var params = $('#methodParams').val();
+                    params = params.split(',');
+					var cleanParams = [];
+
+					for (var i = 0; i < params.length; i++) {
+						params[i] = $.trim(params[i]);
+						if (params[i] != '' && params[i] != null && params[i] !== undefined)
+							cleanParams.push(params[i]);
+					}
+                    console.log(cleanParams);
+                    //prmtr = JSON.parse(JSON.stringify($.encoder.canonicalize(prmtr)));
+                }
+
+                let body = '';
+                self.kernel.createMethod(nodeID, methodName, cleanParams, body);
+        }  
+            //self.kernel.execute( nodeID, editor.getValue() );
+           // self.kernel.execute( nodeID, $("#newScriptArea").val() );
+        });
+
+        $(topdownName).hide();
+        $(topdownTemp).show();
+        
+        this.topdownName = topdownTemp;
+        this.topdownTemp = topdownName;
+    }
+
     // -- createScript ----------------------------------------------------------------------
 
     function createScript (nodeID) // invoke with the view as "this"
@@ -1227,21 +1298,7 @@ define( [
 
           $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'> <div id='editorlive'></div></pre><input class='update_button' type='button' id='create-" + nodeIDAlpha + "' value='Create' /></div><hr>");
 
-            var editor = this.ace.edit("editorlive");
-        editor.setTheme("ace/theme/monokai");
-        editor.setFontSize(16);
-        editor.getSession().setMode("ace/mode/javascript");
-
-     editor.on('focus', function(event, editor) {
-          // Expand the script editor
-            self.editingScript = true;
-            $('#editor').animate({ 'left' : "-800px" }, 175);
-            $('.vwf-tree').animate({ 'width' : "800px" }, 175);
-    });
-
-    editor.on('blur', function(event, editor) {
-        //$(editor.container).animate({ width: 300 });
-    });
+           var editor = createAceEditor(self, nodeID);
 
 
         $("#create-" + nodeIDAlpha).click ( function(evt) {
@@ -1268,11 +1325,19 @@ define( [
 
     // -- viewScript ------------------------------------------------------------------------
 
-    function createAceEditor(view) {
+    function createAceEditor(view, nodeID) {
         var editor = view.ace.edit("editorlive");
         editor.setTheme("ace/theme/monokai");
         editor.setFontSize(16);
         editor.getSession().setMode("ace/mode/javascript");
+
+        editor.commands.addCommand({
+                name: "myCommand",
+                bindKey: { win: "Ctrl-e", mac: "Command-e" },                
+                exec: function() {
+                    codeEditorDoit(editor, nodeID);
+                }
+});     
 
         editor.on('focus', function (event, editor) {
             // Expand the script editor
@@ -1282,7 +1347,9 @@ define( [
         });
 
         editor.on('blur', function (event, editor) {
-            //$(editor.container).animate({ width: 300 });
+            //    $('#editor').animate({ 'left' : "-260px" }, 175);
+            //     $('.vwf-tree').animate({ 'width' : "260px" }, 175);
+      
         });
 
         return editor;
@@ -1325,7 +1392,7 @@ define( [
 
          $(topdownTemp).append("<div class='scriptEntry'><pre class='scriptCode'> <div id='editorlive'>" + scriptText + "</div></pre><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + scriptID + "' value='Update' /><div style='padding:6px'><input class='live_button' type='button' id='doit-" + nodeIDAlpha + "-" + scriptID + "' value='DoIt' /></div></div><hr>");
 
-         var editor = createAceEditor(self);
+         var editor = createAceEditor(self, nodeID);
 
         //  $(topdownTemp).append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
          $("#doit-" + nodeIDAlpha + "-" + scriptID).click(function(evt) {
@@ -1389,11 +1456,17 @@ define( [
 
             var method = vwf.getMethod(nodeID, methodNameAlpha);
 
+           $(topdownTemp).append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
+
           $(topdownTemp).append("<div id='editorlive'>" + method.body + "</div><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + methodNameAlpha + "' value='Update' />");
 
           
 
-        var editor = createAceEditor(self);
+        var editor = createAceEditor(self, nodeID);
+
+        $("#doit").click(function(evt) {
+            codeEditorDoit.call(self, editor, nodeID);
+        });
 
           $("#update-" + nodeIDAlpha + "-" + methodNameAlpha).click ( function(evt) {
                 var evalText = editor.getValue();
@@ -1401,12 +1474,16 @@ define( [
                 { body: evalText, type: "application/javascript", parameters: method.parameters } );
             });
 
-            let params = method.parameters.length;
+          var params = [];
+          if (method.parameters) {
+              params = method.parameters.length
+          };
+
           if (params >= 1) {
 
         for(var i=1; i<=params; i++)
         {
-            $(topdownTemp).append("<div id='param" + i + "' class='propEntry'><table><tr><td><b>Parameter " + i + ": </b></td><td><input type='text' class='input_text' id='input-param" + i + "'></td></tr></table></div>");
+            $(topdownTemp).append("<div id='param" + i + "' class='propEntry'><table><tr><td><b>" + method.parameters[i-1] + ": " + i + ": </b></td><td><input type='text' class='input_text' id='input-param" + i + "'></td></tr></table></div>");
             $('#input-param'+ i).keydown( function(evt) {
                     evt.stopPropagation();
                 });
@@ -1772,31 +1849,18 @@ function showCodeEditorTab() // invoke with the view as "this"
 
         //Open Live Editor
          $('#codeEditor_tab').append('<div id="editorlive">console.log("test")</div>');
-         var editor = this.ace.edit("editorlive");
-     editor.setTheme("ace/theme/monokai");
-     editor.setFontSize(16);
-     //editor.setOption("showPrintMargin", false);
-//      editor.setOptions({
-//   fontSize: "14pt"
-// });
-     editor.getSession().setMode("ace/mode/javascript");
+         
+     var sceneID = self.kernel.application();    
+     var editor = createAceEditor(self, sceneID);
 
-     editor.on('focus', function(event, editor) {
-          // Expand the script editor
-            self.editingScript = true;
-            $('#editor').animate({ 'left' : "-800px" }, 175);
-            $('.vwf-tree').animate({ 'width' : "800px" }, 175);
-    });
-
-    editor.on('blur', function(event, editor) {
-        //$(editor.container).animate({ width: 300 });
-    });
-
-    
+    editor.on('blur', function (event, editor) {
+               $('#editor').animate({ 'left' : "-260px" }, 175);
+                $('.vwf-tree').animate({ 'width' : "260px" }, 175);
+            });
 
      $('#codeEditor_tab').append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
          $('#doit').click(function(evt) {
-             var sceneID = self.kernel.application();
+             //var sceneID = self.kernel.application();
             codeEditorDoit.call(self, editor, sceneID);
         });
 
