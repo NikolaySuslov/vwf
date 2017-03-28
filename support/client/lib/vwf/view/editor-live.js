@@ -2035,10 +2035,11 @@ function showCodeEditorTab() // invoke with the view as "this"
         if(!this.aboutInit)
         {
             $('#about_tab').append("<div class='header'>About</div>" + 
-                "<div class='about'><p style='font:bold 12pt Arial'>Virtual World Framework</p>" +
-                "<p><b>Version: </b>" + version.toString() + "</p>" +
-                "<p><b>Site: </b><a href='http://virtualworldframework.com' target='_blank'>http://virtualworldframework.com</a></p>" +
-                "<p><b>Source: </b><a href='https://github.com/virtual-world-framework' target='_blank'>https://github.com/virtual-world-framework</a></p></div>");
+                "<div class='about'><p style='font:bold 12pt Arial'>Virtual World Framework & LiveCode editor</p>" +
+                "<p><b>Version: </b> 0.1 <b>VWF version: </b>" + version.toString() + "</p>" +
+                "<p><b>This project site: </b><a href='http://demo.krestianstvo.org' target='_blank'>http://demo.krestianstvo.org</a></p>" +
+                "<p><b>Site VWF: </b><a href='http://virtualworldframework.com' target='_blank'>http://virtualworldframework.com</a></p>" +
+                "<p><b>Project source: </b><a href='https://github.com/NikolaySuslov/vwf/tree/aframe' target='_blank'>https://github.com/NikolaySuslov/vwf/tree/aframe</a></p></div>");
 
             this.aboutInit = true;
         }
