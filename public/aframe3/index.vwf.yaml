@@ -30,6 +30,19 @@ children:
     events:
       clickEvent:
     methods:
+      clickEventMethod:
+        body: |
+          vwf_view.kernel.callMethod(this.id, "changeColor", [getRandomColor()]);
+          //this.changeColor(getRandomColor());
+          
+          function getRandomColor(){
+          var letters = '0123456789ABCDEF';
+          var color = '#';
+          for (var i = 0; i < 6; i++) {
+             color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color
+          }
       changeColor:
         parameters:
           - color
@@ -40,17 +53,8 @@ children:
     scripts:
       - |
         this.clickEvent = function(){
-         vwf_view.kernel.callMethod(this.id, "changeColor", [getRandomColor()]);
-          //this.changeColor(getRandomColor());
-          
-        function getRandomColor(){
-         var letters = '0123456789ABCDEF';
-         var color = '#';
-         for (var i = 0; i < 6; i++) {
-             color += letters[Math.floor(Math.random() * 16)];
+          this.clickEventMethod();
          }
-         return color
-         }}
   sphere:
     extends: http://vwf.example.com/aframe/asphere.vwf
     properties:

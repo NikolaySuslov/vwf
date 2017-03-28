@@ -318,21 +318,21 @@ define( [
 
         executed: function( nodeID, scriptText, scriptType ) {
 
-            var nodeScript = {
-                text: scriptText,
-                type: scriptType,
-            };
+            // var nodeScript = {
+            //     text: scriptText,
+            //     type: scriptType,
+            // };
 
-            if ( !this.allScripts[ nodeID ] ) {
-                var nodeScripts = new Array();
-                nodeScripts.push(nodeScript);
+            // if ( !this.allScripts[ nodeID ] ) {
+            //     var nodeScripts = new Array();
+            //     nodeScripts.push(nodeScript);
 
-                this.allScripts[ nodeID ] = nodeScripts;
-            }
+            //     this.allScripts[ nodeID ] = nodeScripts;
+            // }
 
-            else {
-                this.allScripts[ nodeID ].push(nodeScript);
-            }
+            // else {
+            //     this.allScripts[ nodeID ].push(nodeScript);
+            // }
         },
 
         //ticked: [ /* time */ ],
@@ -1157,6 +1157,13 @@ define( [
             createMethod.call(self, nodeID);
         });
 
+         // Create new Event
+
+        $(topdownTemp).append("<div id='createEventID'></div>");
+        $('#createEventID').append("<div class='childContainer'><div class='childEntry'><b>New Event</div></div>");
+        $('#createEventID').click( function (evt) {
+            createEvent.call(self, nodeID);
+        });
 
         // Create new script
         $(topdownTemp).append("<div id='createScript'></div>");
@@ -1211,7 +1218,69 @@ define( [
         updateCameraProperties.call(self);
     }
 
-    // -- createdMethod
+    // createEvent
+
+    function createEvent (nodeID) // invoke with the view as "this"
+    {
+        var self = this;
+        var topdownName = this.topdownName;
+        var topdownTemp = this.topdownTemp;
+
+        var nodeIDAlpha = $.encoder.encodeForAlphaNumeric(nodeID);
+        
+        $(topdownTemp).html("<div class='header'><img src='images/back.png' id='script-" + nodeIDAlpha + "-back' alt='back'/> New event</div>");
+        $('#script-' + nodeIDAlpha + '-back').click ( function(evt) {
+            self.editingScript = false;
+            drillBack.call(self, nodeID);
+
+            // Return editor to normal width
+            $('#editor').animate({ 'left' : "-260px" }, 175);
+            $('.vwf-tree').animate({ 'width' : "260px" }, 175);
+        });
+
+        $(topdownTemp).append("<div id='cm'>Name:<br/><input type='text' class='input_text' id='eventName'/><br/>Parameters:<br/><input type='text' class='input_text' id='eventParams'/></div><hr><input class='update_button' type='button' id='createEvent' value='Create' />");
+
+
+        $("#createEvent").click ( function(evt) {
+            console.log("not yet created");
+
+              
+                if( $('#eventName').val() )
+                {
+                    var eventName = $('#eventName').val();
+                    //prmtr = JSON.parse(JSON.stringify($.encoder.canonicalize(prmtr)));
+                    console.log(eventName);
+                
+                if( $('#eventParams').val() )
+                {
+                    var params = $('#eventParams').val();
+                    params = params.split(',');
+					var cleanParams = [];
+
+					for (var i = 0; i < params.length; i++) {
+						params[i] = $.trim(params[i]);
+						if (params[i] != '' && params[i] != null && params[i] !== undefined)
+							cleanParams.push(params[i]);
+					}
+                    console.log(cleanParams);
+                    //prmtr = JSON.parse(JSON.stringify($.encoder.canonicalize(prmtr)));
+                }
+
+                let body = '';
+                self.kernel.createEvent(nodeID, eventName, cleanParams);
+        }  
+            //self.kernel.execute( nodeID, editor.getValue() );
+           // self.kernel.execute( nodeID, $("#newScriptArea").val() );
+        });
+
+        $(topdownName).hide();
+        $(topdownTemp).show();
+        
+        this.topdownName = topdownTemp;
+        this.topdownTemp = topdownName;
+    }
+
+    // -- createMethod
 
      function createMethod (nodeID) // invoke with the view as "this"
     {
@@ -1332,10 +1401,18 @@ define( [
         editor.getSession().setMode("ace/mode/javascript");
 
         editor.commands.addCommand({
-                name: "myCommand",
+                name: "doit",
                 bindKey: { win: "Ctrl-e", mac: "Command-e" },                
                 exec: function() {
                     codeEditorDoit(editor, nodeID);
+                }
+});     
+
+    editor.commands.addCommand({
+                name: "printit",
+                bindKey: { win: "Ctrl-b", mac: "Command-b" },                
+                exec: function() {
+                    codeEditorPrintit(editor, nodeID);
                 }
 });     
 
@@ -1529,7 +1606,7 @@ define( [
 
     // -- setArgs ---------------------------------------------------------------------------
 
-    function setArgs (eventName, eventArgs, nodeID) // invoke with the view as "this"
+   function setArgs (eventName, eventArgs, nodeID) // invoke with the view as "this"
     {
         var self = this;
         var topdownName = this.topdownName;
@@ -1584,6 +1661,18 @@ define( [
         this.topdownName = topdownTemp;
         this.topdownTemp = topdownName;
 
+    }
+
+    function getPrototypes( kernel, extendsID ) {
+        var prototypes = [];
+        var id = extendsID;
+
+        while ( id !== undefined ) {
+            prototypes.push( id );
+            id = kernel.prototype( id );
+        }
+                
+        return prototypes;
     }
 
     function getPrototypes( kernel, extendsID ) {
@@ -1854,14 +1943,15 @@ function showCodeEditorTab() // invoke with the view as "this"
      var editor = createAceEditor(self, sceneID);
 
     editor.on('blur', function (event, editor) {
-               $('#editor').animate({ 'left' : "-260px" }, 175);
-                $('.vwf-tree').animate({ 'width' : "260px" }, 175);
+            //    $('#editor').animate({ 'left' : "-260px" }, 175);
+            //     $('.vwf-tree').animate({ 'width' : "260px" }, 175);
             });
 
      $('#codeEditor_tab').append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
-         $('#doit').click(function(evt) {
-             //var sceneID = self.kernel.application();
-            codeEditorDoit.call(self, editor, sceneID);
+     $('#codeEditor_tab').append("<div style='padding:6px'><input type='button' id='min' value='Min Window' /></div>");
+         $('#min').click(function(evt) {
+               $('#editor').animate({ 'left' : "-260px" }, 175);
+             $('.vwf-tree').animate({ 'width' : "260px" }, 175);
         });
 
             this.codeEditorInit = true;
@@ -1895,6 +1985,25 @@ function showCodeEditorTab() // invoke with the view as "this"
 			self.kernel.execute(nodeID, selectedText);
 
 		}
+
+ function codeEditorPrintit(editor, nodeID)
+		{
+			var selectedText = editor.getSession().doc.getTextRange(editor.selection.getRange());
+
+			if (selectedText == "") {
+
+				var currline = editor.getSelectionRange().start.row;
+				var selectedText = editor.session.getLine(currline);
+
+			}
+
+			//console.log(selectedText);
+            //var sceneID = self.kernel.application();
+            let scriptText = 'console.log('+selectedText+');'
+			self.kernel.execute(nodeID, scriptText);
+
+		}
+         
 
 
 
