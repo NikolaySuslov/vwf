@@ -1948,6 +1948,11 @@ function showCodeEditorTab() // invoke with the view as "this"
             });
 
      $('#codeEditor_tab').append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
+
+      $("#doit").click(function(evt) {
+            codeEditorDoit.call(self, editor, sceneID);
+        });
+
      $('#codeEditor_tab').append("<div style='padding:6px'><input type='button' id='min' value='Min Window' /></div>");
          $('#min').click(function(evt) {
                $('#editor').animate({ 'left' : "-260px" }, 175);
@@ -1982,7 +1987,7 @@ function showCodeEditorTab() // invoke with the view as "this"
 
 			//console.log(selectedText);
             //var sceneID = self.kernel.application();
-			self.kernel.execute(nodeID, selectedText);
+			vwf_view.kernel.execute(nodeID, selectedText);
 
 		}
 
