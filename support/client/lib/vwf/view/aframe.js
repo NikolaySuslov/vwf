@@ -38,6 +38,8 @@ define(["module", "vwf/view", "jquery", "jquery-ui"], function (module, view, $)
             else {
                 this.rootSelector = options;
             }
+
+         
         },
 
         createdNode: function (nodeID, childID, childExtendsID, childImplementsIDs,
@@ -56,6 +58,7 @@ define(["module", "vwf/view", "jquery", "jquery-ui"], function (module, view, $)
                 createAvatar(childID);
             }
 
+
         },
 
         createdProperty: function (nodeId, propertyName, propertyValue) {
@@ -67,7 +70,24 @@ define(["module", "vwf/view", "jquery", "jquery-ui"], function (module, view, $)
         },
 
         satProperty: function (nodeId, propertyName, propertyValue) {
+            var self = this;
 
+             var node = this.state.nodes[ nodeId ];
+
+            if ( !( node && node.aframeObj ) ) {
+                return;
+            }
+
+            var aframeObject = node.aframeObj;
+            switch (propertyName) {
+                case "clickable":
+                    if (propertyValue) {
+                        aframeObject.addEventListener('click', function (evt) {
+                            vwf_view.kernel.fireEvent(nodeId, "clickEvent")
+                        })
+                    }
+                    break;
+            }
         },
 
         firedEvent: function (nodeID, eventName, eventParameters) {

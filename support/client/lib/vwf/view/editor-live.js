@@ -1533,13 +1533,21 @@ define( [
 
             var method = vwf.getMethod(nodeID, methodNameAlpha);
 
-           $(topdownTemp).append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
+           $(topdownTemp).append("<div style='padding:6px'><input class='live_button' type='button' id='printit' value='Print It' /><span> </span><input class='live_button' type='button' id='doit' value='Do It' /><span> </span><input class='live_button' type='button' id='update-" + nodeIDAlpha + "-" + methodNameAlpha + "' value='Update' /><span> </span> <input class='live_button' type='button' id='call' value='Call' /></div>");
 
-          $(topdownTemp).append("<div id='editorlive'>" + method.body + "</div><input class='update_button' type='button' id='update-" + nodeIDAlpha + "-" + methodNameAlpha + "' value='Update' />");
+            //$(topdownTemp).append("<input class='update_button' type='button' id='call' value='Call' />");
+           
+
+          $(topdownTemp).append("<div id='editorlive'>" + method.body + "</div>");
 
           
 
         var editor = createAceEditor(self, nodeID);
+
+         $("#printit").click(function(evt) {
+            codeEditorPrintit.call(self, editor, nodeID);
+        });
+        
 
         $("#doit").click(function(evt) {
             codeEditorDoit.call(self, editor, nodeID);
@@ -1550,6 +1558,7 @@ define( [
                 self.kernel.setMethod( nodeID, methodNameAlpha,
                 { body: evalText, type: "application/javascript", parameters: method.parameters } );
             });
+
 
           var params = [];
           if (method.parameters) {
@@ -1573,7 +1582,7 @@ define( [
         }
           }
 
-           $(topdownTemp).append("<input class='update_button' type='button' id='call' value='Call' />");
+          
 
         $('#call').click ( function (evt) {
 
@@ -1936,6 +1945,22 @@ function showCodeEditorTab() // invoke with the view as "this"
         {
             $('#codeEditor_tab').append("<div class='header'>Live Code Editor</div>");
 
+         $('#codeEditor_tab').append("<div style='padding:6px'><input type='button' id='min' value='Min Window' /><span> </span><input class='live_button' type='button' id='printit' value='Print It' /><span> </span><input class='live_button' type='button' id='doit' value='Do It' /></div>");
+
+           $("#doit").click(function(evt) {
+            codeEditorDoit.call(self, editor, sceneID);
+        });
+
+         $("#printit").click(function(evt) {
+            codeEditorPrintit.call(self, editor, sceneID);
+        });
+
+         // $('#codeEditor_tab').append("<div style='padding:6px'></div>");
+         $('#min').click(function(evt) {
+               $('#editor').animate({ 'left' : "-260px" }, 175);
+             $('.vwf-tree').animate({ 'width' : "260px" }, 175);
+        });
+
         //Open Live Editor
          $('#codeEditor_tab').append('<div id="editorlive">console.log("test")</div>');
          
@@ -1947,17 +1972,6 @@ function showCodeEditorTab() // invoke with the view as "this"
             //     $('.vwf-tree').animate({ 'width' : "260px" }, 175);
             });
 
-     $('#codeEditor_tab').append("<div style='padding:6px'><input class='live_button' type='button' id='doit' value='DoIt' /></div>");
-
-      $("#doit").click(function(evt) {
-            codeEditorDoit.call(self, editor, sceneID);
-        });
-
-     $('#codeEditor_tab').append("<div style='padding:6px'><input type='button' id='min' value='Min Window' /></div>");
-         $('#min').click(function(evt) {
-               $('#editor').animate({ 'left' : "-260px" }, 175);
-             $('.vwf-tree').animate({ 'width' : "260px" }, 175);
-        });
 
             this.codeEditorInit = true;
         }

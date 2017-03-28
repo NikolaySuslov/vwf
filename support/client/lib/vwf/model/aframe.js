@@ -169,18 +169,22 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
 
                     // 'id' will be set to the nodeID
                     value = propertyValue;
+                     switch (propertyName) {
 
-                    if (!aframeObject) return value;
+                         default:
+                            value = undefined;
+                            break;
+                     }
+                    
+                }
 
-                    if (propertyValue !== undefined) {
-                        //self = this;
+                 if ( value === undefined && isAEntityDefinition( node.prototypes ) ) {
 
+                    value = propertyValue;
+                    
+                    switch ( propertyName ) { 
 
-                        if (aframeObject instanceof AFRAME.AEntity) {
-
-                            switch (propertyName) {
-
-                                case "position":
+                         case "position":
                                     aframeObject.setAttribute('position', { x: propertyValue[0], y: propertyValue[1], z: propertyValue[2] });
                                     break;
                                 case "rotation":
@@ -205,13 +209,19 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                     aframeObject.setAttribute('wireframeLinewidth', propertyValue);
                                     break;
 
-                                case "clickable":
-                                    if (propertyValue) {
-                                        aframeObject.addEventListener('click', function (evt) {
-                                            self.kernel.fireEvent(node.ID, "clickEvent");
-                                        });
-                                    }
-                                    break;
+                                // case "clickable":
+                                  
+                                //         value = propertyValue;
+
+                                //     break;
+
+                                // case "clickable":
+                                //     if (propertyValue) {
+                                //         aframeObject.addEventListener('click', function (evt) {
+                                //             vwf_view.kernel.fireEvent(node.ID, "clickEvent");
+                                //         });
+                                //     }
+                                //     break;
 
 
                                 case "src":
@@ -221,12 +231,19 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                     aframeObject.setAttribute('repeat', propertyValue);
                                     break;
 
-                            }
+                        default:
+                            value = undefined;
+                            break; 
+                    }
+                
+                }
 
-                            if (aframeObject.nodeName == "A-TEXT") {
-                                switch (propertyName) {
+                if ( value === undefined && aframeObject.nodeName == "A-TEXT" ) {
+                    value = propertyValue;
+                    
+                    switch ( propertyName ) {
 
-                                    case "value":
+                           case "value":
                                         aframeObject.setAttribute('value', propertyValue);
                                         break;
 
@@ -234,12 +251,19 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                         aframeObject.setAttribute('color', propertyValue);
                                         break;
 
-                                }
-                            }
 
-                            if (aframeObject.nodeName == "A-SCENE") {
-                                switch (propertyName) {
-                                    case "fog":
+                        default:
+                            value = undefined;
+                            break;
+                    }
+                }
+
+                 if ( value === undefined && aframeObject.nodeName == "A-SCENE" ) {
+                    value = propertyValue;
+                    
+                    switch ( propertyName ) {
+
+                         case "fog":
                                         aframeObject.setAttribute('fog', propertyValue);
                                         break;
                                     case "assets":
@@ -264,14 +288,20 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
 
                                         }
                                         break;
-                                }
-                            }
 
-                            if (aframeObject.nodeName == "A-BOX") {
-                               //"depth", "height", "width", "segments-depth", "segments-height", "segments-width"
-                                switch (propertyName) {
 
-                                    case "depth":
+                        default:
+                            value = undefined;
+                            break;
+                    }
+                }
+                    
+                if ( value === undefined && aframeObject.nodeName == "A-BOX") {
+                    value = propertyValue;
+                    
+                    switch ( propertyName ) {
+
+                           case "depth":
                                         aframeObject.setAttribute('depth', propertyValue);
                                         break;
                                     case "height":
@@ -280,13 +310,20 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                     case "width":
                                         aframeObject.setAttribute('width', propertyValue);
                                         break;
-                                }
-                            }
 
-                            if (aframeObject.nodeName == "A-LIGHT") {
-                                  //"angle", "color", "decay", "distance", "ground-color", "intensity", "penumbra", "type", "target"
-                                   switch (propertyName) {
 
+                        default:
+                            value = undefined;
+                            break;
+                    }
+                }
+                    
+                 if ( value === undefined && aframeObject.nodeName == "A-LIGHT" ) {
+                    value = propertyValue;
+                    
+                    switch ( propertyName ) {
+
+                           //"angle", "color", "decay", "distance", "ground-color", "intensity", "penumbra", "type", "target"
                                     case "color":
                                         aframeObject.setAttribute('color', propertyValue);
                                         break;
@@ -299,44 +336,66 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                     case "distance":
                                         aframeObject.setAttribute('distance', propertyValue);
                                         break;
-                                }
-                               
-                            }
 
 
-                            if (aframeObject.nodeName == "A-COLLADA-MODEL") {
-                                switch (propertyName) {
+                        default:
+                            value = undefined;
+                            break;
+                    }
+                }
 
-                                    case "src":
+                if ( value === undefined && aframeObject.nodeName == "A-COLLADA-MODEL") {
+                    value = propertyValue;
+                    
+                    switch ( propertyName ) {
+
+                          case "src":
                                         aframeObject.setAttribute('src', propertyValue);
                                         break;
-                                }
-                            }
 
-                            if (aframeObject.nodeName == "A-PLANE") {
-                                switch (propertyName) {
+                         
+                        default:
+                            value = undefined;
+                            break;
+                    }
+                }
 
-                                    case "height":
+                 if ( value === undefined && aframeObject.nodeName == "A-PLANE") {
+                    value = propertyValue;
+                    
+                    switch ( propertyName ) {
+
+                          case "height":
                                         aframeObject.setAttribute('height', propertyValue);
                                         break;
                                     case "width":
                                         aframeObject.setAttribute('width', propertyValue);
                                         break;
 
-                                }
-                            }
+                         
+                        default:
+                            value = undefined;
+                            break;
+                    }
+                }
 
-                            if (aframeObject.nodeName == "A-SPHERE") {
-                                switch (propertyName) {
+                     if (value === undefined && aframeObject.nodeName == "A-SPHERE") {
+                         value = propertyValue;
 
-                                    case "radius":
-                                        aframeObject.setAttribute('radius', propertyValue);
-                                        break;
-                                }
-                            }
+                         switch (propertyName) {
+                             case "radius":
+                                 aframeObject.setAttribute('radius', propertyValue);
+                                 break;
 
-                            if (aframeObject.nodeName == "A-CAMERA") {
-                                switch (propertyName) {
+                             default:
+                                 value = undefined;
+                                 break;
+                         }
+                     }
+
+                        if (value === undefined && aframeObject.nodeName == "A-CAMERA") {
+                         value = propertyValue;
+                          switch (propertyName) {
 
                                     case "look-controls-enabled":
                                         aframeObject.setAttribute('look-controls', 'enabled', propertyValue);
@@ -357,11 +416,19 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                             });
                                         }
                                         break;
-                                }
-                            }
-                        }
-                    }
-                }
+                    
+
+                             default:
+                                 value = undefined;
+                                 break;
+                         }
+                     }
+
+
+                    //if (!aframeObject) return value;
+
+                    //if (propertyValue !== undefined) {
+                        //self = this;
 
             }
             return value;
@@ -380,16 +447,14 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                 var aframeObject = node.aframeObj;
 
                 if (isNodeDefinition(node.prototypes)) {
+                         switch ( propertyName ) {
+                         }
+                }
 
-                    if (!aframeObject) return value;
-                    // self = this;
-
-
-                    if (aframeObject instanceof AFRAME.AEntity) {
-
-                        switch (propertyName) {
-
-                            case "position":
+                if ( value === undefined && isAEntityDefinition( node.prototypes ) ) {
+                    
+                    switch ( propertyName ) { 
+                        case "position":
                                 var pos = aframeObject.getAttribute('position');
                                 value = [pos.x, pos.y, pos.z];
                                 break;
@@ -421,9 +486,9 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 value = aframeObject.getAttribute('wireframeLinewidth');
                                 break;
 
-                            case "clickable":
-                                value
-                                break;
+                            // case "clickable":
+                            //   value = propertyValue; 
+                            //     break;
 
                             case "src":
                                 value = aframeObject.getAttribute('src');
@@ -431,20 +496,22 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                             case "repeat":
                                 value = aframeObject.getAttribute('repeat');
 
-                        }
+                    }
+                }
 
-                        if (aframeObject.nodeName == "A-SCENE") {
-                            switch (propertyName) {
-
-                                case "fog":
+                 if ( value === undefined && aframeObject.nodeName == "A-SCENE" ) {
+                    
+                    switch ( propertyName ) {
+                            case "fog":
                                     value = aframeObject.getAttribute('fog');
                                     break;
-                            }
-                        }
+                    }
+                }
 
-                        if (aframeObject.nodeName == "A-BOX") {
-                            switch (propertyName) {
-                                case "depth":
+                 if ( value === undefined && aframeObject.nodeName == "A-BOX" ) {
+                    
+                    switch ( propertyName ) {
+                             case "depth":
                                     value = aframeObject.getAttribute('depth');
                                     break;
                                 case "height":
@@ -453,12 +520,12 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                 case "width":
                                     value = aframeObject.getAttribute('width');
                                     break;
+                    }
+                }
 
-                            }
-                        }
-
-                        if (aframeObject.nodeName == "A-LIGHT") {
-                           //"angle", "color", "decay", "distance", "ground-color", "intensity", "penumbra", "type", "target"
+                 if ( value === undefined && aframeObject.nodeName == "A-LIGHT" ) {
+                    
+                   //"angle", "color", "decay", "distance", "ground-color", "intensity", "penumbra", "type", "target"
                            switch (propertyName) {
                                 case "color":
                                     value = aframeObject.getAttribute('color');
@@ -473,62 +540,64 @@ define(["module", "vwf/model", "vwf/utility"], function (module, model, utility)
                                     value = aframeObject.getAttribute('intensity');
                                     break;
                                 }
+                }
 
-                        }
-
-                        if (aframeObject.nodeName == "A-PLANE") {
-                            switch (propertyName) {
-
-                                case "height":
+                     if ( value === undefined && aframeObject.nodeName == "A-PLANE" ) {
+        
+                           switch (propertyName) {
+                                 case "height":
                                     value = aframeObject.getAttribute('height');
                                     break;
                                 case "width":
                                     value = aframeObject.getAttribute('width');
                                     break;
+                                }
+                }
 
-                            }
-                        }
-
-                        if (aframeObject.nodeName == "A-SPHERE") {
-                            switch (propertyName) {
-
-                                case "radius":
+                 if ( value === undefined && aframeObject.nodeName == "A-SPHERE" ) {
+        
+                           switch (propertyName) {
+                                  case "radius":
                                     value = aframeObject.getAttribute('radius');
                                     break;
-                            }
-                        }
+                                }
+                }
 
-                        if (aframeObject.nodeName == "A-TEXT") {
-                            switch (propertyName) {
-
-                                case "value":
+                 if ( value === undefined && aframeObject.nodeName == "A-TEXT" ) {
+        
+                           switch (propertyName) {
+                                 case "value":
                                     value = aframeObject.getAttribute('value');
                                     break;
 
                                 case "color":
                                     value = aframeObject.getAttribute('color');
                                     break;
-                            }
-                        }
+                                }
+                }
 
-                        if (aframeObject.nodeName == "A-CAMERA") {
-                            switch (propertyName) {
+                 if ( value === undefined && aframeObject.nodeName == "A-CAMERA" ) {
+        
+                           switch (propertyName) {
                                 case "look-controls-enabled":
                                     value = aframeObject.getAttribute('look-controls').enabled;
                                     break;
-                            }
-                        }
+                                }
+                }
 
-                        if (aframeObject.nodeName == "A-COLLADA-MODEL") {
-                            switch (propertyName) {
+                  if ( value === undefined && aframeObject.nodeName == "A-COLLADA-MODEL" ) {
+        
+                           switch (propertyName) {
                                 case "src":
                                     value = aframeObject.getAttribute('src');
                                     break;
-                            }
-                        }
-
-                    }
+                                }
                 }
+
+            }
+
+           if ( value !== undefined ) {
+                propertyValue = value;
             }
 
             return value;
@@ -613,6 +682,17 @@ function isNodeDefinition(prototypes) {
     }
     return found;
 }
+
+function isAEntityDefinition( prototypes ) {
+        var found = false;
+        if ( prototypes ) {
+            for ( var i = 0; i < prototypes.length && !found; i++ ) {
+                found = ( prototypes[i] == "http://vwf.example.com/aframe/aentity.vwf" );
+            }
+        }
+        return found;
+    }
+
 
 
 // Changing this function significantly from the GLGE code

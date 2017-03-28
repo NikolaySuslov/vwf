@@ -45,27 +45,24 @@ children:
     events:
       clickEvent:
     methods:
-      changeColor:
+      clickEventMethod:
+        body: |
+          if (this.clickable) {
+          let genColor = this.generateColor();
+          this.color = genColor 
+          }
+      generateColor:
+        body: |
+          var letters = '0123456789ABCDEF';
+          var color = '#';
+          for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(this.random() * 16)];
+          } return color 
     scripts:
       - |
-        this.changeColor = function(color){
-            //vwf_view.kernel.setProperty(this.id,"color",color);
-            this.color = color;
-            console.log("changed!");
-            } 
-
         this.clickEvent = function(){
-         vwf_view.kernel.callMethod(this.id, "changeColor", [getRandomColor()]);
-          //this.changeColor(getRandomColor());
-          
-        function getRandomColor(){
-         var letters = '0123456789ABCDEF';
-         var color = '#';
-         for (var i = 0; i < 6; i++) {
-             color += letters[Math.floor(Math.random() * 16)];
+          this.clickEventMethod();
          }
-         return color
-         }}
   sphere:
     extends: http://vwf.example.com/aframe/asphere.vwf
     properties:
@@ -83,13 +80,10 @@ children:
           depth: 1
         methods:
           run:
-        scripts:
-        - |
-          this.run = function(){
-          var time = vwf.now;
-          this.position = [this.position[0], this.position[1], Math.sin(time)]
-          this.future( 0.05 ).run();  // schedule the next step
-          }
+            body: |
+              var time = vwf.now;
+              this.position = [this.position[0], this.position[1], Math.sin(time)]
+              this.future( 0.05 ).run();  // schedule the next step
   sky:
     extends: http://vwf.example.com/aframe/asky.vwf
     properties:
@@ -119,10 +113,9 @@ children:
         children:
           cursor:
             extends: http://vwf.example.com/aframe/acursor.vwf
-scripts:
-  - |
-    this.initialize = function(){
+methods:
+  initialize:
+    body: |
       var runBox = vwf_view.kernel.find("", "/sphere/box2")[0];
       console.log(runBox);
       vwf_view.kernel.callMethod(runBox, "run");
-    }
