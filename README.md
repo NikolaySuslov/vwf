@@ -1,6 +1,6 @@
 # Virtual World Framework & A-Frame integration
 
-> This repository is on **ACTIVE** development, expect things could be broken or changed.
+> UPDATED! (09.2018) The most recent A-Frame driver for VWF is avaliable on LiveCoding.space project [https://github.com/NikolaySuslov/livecodingspace](https://github.com/NikolaySuslov/livecodingspace).
 
 ![vwf-aframe](https://krestianstvo.org/books/images/vwf-aframe.jpg)
 
